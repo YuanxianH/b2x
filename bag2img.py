@@ -1,10 +1,10 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-24 17:49:12
- @LastEditTime: 2022-03-25 19:16:07
+ @LastEditTime: 2022-03-25 22:03:47
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to images
- @Example: python bag2img.py /home/yxhuang/data/701/20220324/2022-03-24-17-17-02.bag /camera/image6/compressed
+ @Example: python bag2img.py ${bag_file} ${img_topic}
 '''
 
 import rosbag

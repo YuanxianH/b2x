@@ -1,11 +1,10 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-03-25 20:14:27
+ @LastEditTime: 2022-03-25 22:05:08
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
- @Example: rosrun b2x time_sync_lidar_cam.py /camera/image6/compressed /rslidar_points \
-            --output_dir "./data/synchronized"
+ @Example: rosrun b2x time_sync_lidar_cam.py ${img_topic} ${pcd_topic} --output_dir ${output_dir}
 '''
 
 import numpy as np
@@ -70,7 +69,6 @@ class callBackClass:
         dumpAsPCD(pcd_path, points)
 
         self.count = (self.count + 1) % self.max_count
-        
 
 if __name__ == "__main__":
     rospy.init_node('time_sync_lidar_cam')

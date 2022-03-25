@@ -1,11 +1,10 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 19:39:52
- @LastEditTime: 2022-03-25 20:54:58
+ @LastEditTime: 2022-03-25 22:04:23
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
- @Example: python bag2sync_img_pcd.py /home/yxhuang/data/701/20220324/2022-03-24-17-17-02.bag \
-            /camera/image6/compressed /rslidar_points
+ @Example: python bag2sync_img_pcd.py ${bag_file} ${img_topic} ${pcd_topic}
 '''
 
 import os

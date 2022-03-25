@@ -1,10 +1,10 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-24 18:16:03
- @LastEditTime: 2022-03-25 15:20:53
+ @LastEditTime: 2022-03-25 22:04:02
  @LastEditors: JoeyforJoy
  @Description: rosbag 2 pcd
- @Example: python bag2pcd.py /home/yxhuang/data/701/20220324/2022-03-24-17-17-02.bag /rslidar_points
+ @Example: python bag2pcd.py ${bag_file} ${pcd_topic}
 '''
 
 import os
