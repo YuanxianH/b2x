@@ -1,0 +1,6 @@
+.vscode/
+build/
+data/
+devel/
+.catkin_workspace
+__pycache__/
