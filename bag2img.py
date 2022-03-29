@@ -1,17 +1,17 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-24 17:49:12
- @LastEditTime: 2022-03-29 10:23:42
+ @LastEditTime: 2022-03-29 11:22:06
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to images
  @Example: python bag2img.py ${bag_file} ${img_topic}
 '''
 
 import rosbag
-import cv2
 import os
 import argparse
-from cv_bridge import CvBridge
+
+from src.b2x.utils import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Transfer rosbag to images.")
@@ -28,12 +28,6 @@ if __name__ == "__main__":
 
     bag = rosbag.Bag(args.bag_file, "r")
     bag_data = bag.read_messages(args.topic)
-
-    bridge = CvBridge()
+    
     for topic, msg, t in bag_data:
-        print("timestampe: ", t)
-        if "compressed" in topic:
-            cv_image = bridge.compressed_imgmsg_to_cv2(msg, "bgr8")
-        else:
-            cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
-        cv2.imwrite(os.path.join(args.output_dir, str(t) + "." + args.format), cv_image)
+        dumpImageMsg(msg, args.output_dir, str(t), compressed = isCompressedImage(topic), format = args.format)
