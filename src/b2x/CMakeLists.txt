@@ -167,6 +167,7 @@ include_directories(
 
 catkin_install_python(PROGRAMS 
       scripts/time_sync_lidar_cam.py 
+      scripts/time_sync_cam2.py
       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -1,10 +1,16 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 17:03:34
- @LastEditTime: 2022-03-25 17:48:29
+ @LastEditTime: 2022-03-29 10:54:38
  @LastEditors: JoeyforJoy
  @Description: 
 '''
+
+import os
+import cv2
+from cv_bridge import CvBridge
+import message_filters
+from sensor_msgs.msg import Image, CompressedImage
 
 def array2D2str(array):
     assert len(array.shape) == 2
@@ -56,3 +62,31 @@ def points2pcdstr(points):
 def dumpAsPCD(filepath, points):
     with open(filepath, "w") as f:
         f.write(points2pcdstr(points))
+
+def imgMsg2cvImage(img_msg, compressed = True):
+    bridge = CvBridge()
+    if compressed:
+        cv_image = bridge.compressed_imgmsg_to_cv2(img_msg, "bgr8")
+    else:
+        cv_image = bridge.imgmsg_to_cv2(img_msg, "bgr8")
+    return cv_image
+
+    # img_path = os.path.join(img_dir, frame_name + "." + format)
+    # cv2.imwrite(img_path, cv_image)
+
+def dumpImageMsg(img_msg, img_dir, frame_name, compressed = True, format = "png"):
+    cv_image = imgMsg2cvImage(img_msg, compressed)
+    img_path = os.path.join(img_dir, frame_name + "." + format)
+    cv2.imwrite(img_path, cv_image)
+
+def createImgMsgFilterSubsciber(topic):
+    compressed = "compressed" in topic
+    if compressed:
+        img_sub = message_filters.Subscriber(topic, CompressedImage)
+    else:
+        img_sub = message_filters.Subscriber(topic, Image)
+    return img_sub
+
+def isCompressedImage(topic):
+    assert isinstance(topic, str)
+    return "compressed" in topic

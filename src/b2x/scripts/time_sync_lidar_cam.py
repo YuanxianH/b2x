@@ -53,7 +53,7 @@ class callBackClass:
 
     def __call__(self, img_msg, lidar_msg):
         frame_name = "%06d" % (self.count)
-
+        
         # transfer img msg 2 cv img
         cv_image = self.bridge.compressed_imgmsg_to_cv2(img_msg, "bgr8")
         img_path = os.path.join(self.img_dir, frame_name + ".png")
