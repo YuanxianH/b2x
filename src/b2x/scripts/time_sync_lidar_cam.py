@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-03-25 22:05:08
+ @LastEditTime: 2022-03-29 11:13:58
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: rosrun b2x time_sync_lidar_cam.py ${img_topic} ${pcd_topic} --output_dir ${output_dir}
@@ -11,8 +11,6 @@ import numpy as np
 import rospy
 import message_filters
 from sensor_msgs.msg import PointCloud2, CompressedImage
-import cv2
-from cv_bridge import CvBridge
 
 import sensor_msgs.point_cloud2 as pc2
 
@@ -38,8 +36,7 @@ def parse_args():
     return parser.parse_args()
 
 class callBackClass:
-    def __init__(self, output_dir, pcd_subdir="pcd", img_subdir="image"):
-        self.bridge = CvBridge()
+    def __init__(self, output_dir, pcd_subdir="pcd", img_subdir="image", img_compressed=True):
         self.output_dir = output_dir
         self.pcd_dir = os.path.join(self.output_dir, pcd_subdir)
         self.img_dir = os.path.join(self.output_dir, img_subdir)
@@ -48,6 +45,8 @@ class callBackClass:
         os.makedirs(self.pcd_dir, exist_ok=True)
         os.makedirs(self.img_dir, exist_ok=True)
         
+        self.img_compressed = img_compressed
+
         self.count = 0
         self.max_count = 1000000
 
@@ -55,9 +54,7 @@ class callBackClass:
         frame_name = "%06d" % (self.count)
         
         # transfer img msg 2 cv img
-        cv_image = self.bridge.compressed_imgmsg_to_cv2(img_msg, "bgr8")
-        img_path = os.path.join(self.img_dir, frame_name + ".png")
-        cv2.imwrite(img_path, cv_image)
+        dumpImageMsg(img_msg, self.img_dir, frame_name, compressed = self.img_compressed)
 
         # transfer PointCloud2 to pcd
         points = list(pc2.read_points(lidar_msg, skip_nans=True))
@@ -75,7 +72,7 @@ if __name__ == "__main__":
 
     args = parse_args()
 
-    image_sub = message_filters.Subscriber(args.topic_img, CompressedImage)
+    image_sub = createImgMsgFilterSubsciber(args.topic_img)
     lidar_sub = message_filters.Subscriber(args.topic_lidar, PointCloud2)
 
     ts = message_filters.ApproximateTimeSynchronizer([image_sub, lidar_sub], 10, args.tot, allow_headerless=True)

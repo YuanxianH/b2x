@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 17:03:34
- @LastEditTime: 2022-03-29 10:54:38
+ @LastEditTime: 2022-03-29 11:13:44
  @LastEditors: JoeyforJoy
  @Description: 
 '''
@@ -90,3 +90,10 @@ def createImgMsgFilterSubsciber(topic):
 def isCompressedImage(topic):
     assert isinstance(topic, str)
     return "compressed" in topic
+
+def createImgMsgFilterSubsciber(topic):
+    if isCompressedImage(topic):
+        img_sub = message_filters.Subscriber(topic, CompressedImage)
+    else:
+        img_sub = message_filters.Subscriber(topic, Image)
+    return img_sub

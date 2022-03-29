@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-03-29 11:10:25
+ @LastEditTime: 2022-03-29 11:13:51
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: 
@@ -61,14 +61,6 @@ class callBackClass:
         dumpImageMsg(img2_msg, self.img2_dir, frame_name, compressed = self.img2_compressed)
 
         self.count = (self.count + 1) % self.max_count
-
-def createImgMsgFilterSubsciber(topic):
-    if isCompressedImage(topic):
-        img_sub = message_filters.Subscriber(topic, CompressedImage)
-    else:
-        img_sub = message_filters.Subscriber(topic, Image)
-    return img_sub
-
 
 if __name__ == "__main__":
     rospy.init_node('time_sync_lidar_cam')
