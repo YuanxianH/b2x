@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-24 17:49:12
- @LastEditTime: 2022-03-25 22:03:47
+ @LastEditTime: 2022-03-29 10:23:42
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to images
  @Example: python bag2img.py ${bag_file} ${img_topic}
@@ -32,5 +32,8 @@ if __name__ == "__main__":
     bridge = CvBridge()
     for topic, msg, t in bag_data:
         print("timestampe: ", t)
-        cv_image = bridge.compressed_imgmsg_to_cv2(msg, "bgr8")
+        if "compressed" in topic:
+            cv_image = bridge.compressed_imgmsg_to_cv2(msg, "bgr8")
+        else:
+            cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
         cv2.imwrite(os.path.join(args.output_dir, str(t) + "." + args.format), cv_image)
