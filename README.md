@@ -7,6 +7,7 @@ Now, we surpport:
 - rosbag to images
 - rosbag to pcd files
 - get synchronized images and pcd files from a rosbag
+- get synchronized two images
 
 ## Environment
 This project can only run in **linux** now.
@@ -50,3 +51,7 @@ python bag2pcd.py ${bag_path} ${pcd_topic}
 python bag2sync_img_pcd.py ${bag_path} ${image_topic} ${pcd_topic}
 ```
 
+- **get synchronized two image topics**
+```bash
+python bag2sync_img2.py ${bag_file} ${img1_topic} ${img2_topic}
+```
