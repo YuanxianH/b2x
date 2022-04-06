@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 19:39:52
- @LastEditTime: 2022-03-29 11:08:00
+ @LastEditTime: 2022-04-06 21:34:28
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image1 and image2.
  @Example: python bag2sync_img2.py ${bag_file} ${img1_topic} ${img2_topic}
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         exit()
     
     system("roscore&")
-    system("./devel/setup.bash; \
+    system(". ./devel/setup.sh; \
             rosrun b2x time_sync_cam2.py %s %s --output_dir %s --tot %s \
                 --img1_dir_label %s --img2_dir_label %s &" % 
             (args.topic_img1, args.topic_img2, args.output_dir, args.tot, \

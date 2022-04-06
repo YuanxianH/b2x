@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 19:39:52
- @LastEditTime: 2022-03-25 22:04:23
+ @LastEditTime: 2022-04-06 21:33:24
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: python bag2sync_img_pcd.py ${bag_file} ${img_topic} ${pcd_topic}
@@ -33,11 +33,13 @@ if __name__ == "__main__":
         print("ERROR. './devel/setup.bash' must exist")
         exit()
     
-    system("roscore&")
-    system("./devel/setup.bash; \
+    system("roscore &")
+    # NOTE: os.system() can only source sh instead of bash
+    system(". ./devel/setup.sh; \
             rosrun b2x time_sync_lidar_cam.py %s %s --output_dir %s --tot %s \
-                --pcd_dir_label %s --img_dir_label %s &" % 
+                --pcd_dir_label %s --img_dir_label %s&  " % 
             (args.topic_img, args.topic_lidar, args.output_dir, args.tot, \
              args.pcd_dir_label, args.img_dir_label))
     system("rosbag play %s" % (args.bag_file))
-    system("killall rosbag; killall roscore; sleep 1;")
+    system("killall rosbag; killall roscore; killall time_sync_lidar_cam.py; sleep 1;")
+    

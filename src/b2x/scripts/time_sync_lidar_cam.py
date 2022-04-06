@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-03-29 11:13:58
+ @LastEditTime: 2022-04-06 20:41:01
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: rosrun b2x time_sync_lidar_cam.py ${img_topic} ${pcd_topic} --output_dir ${output_dir}
@@ -69,7 +69,6 @@ class callBackClass:
 
 if __name__ == "__main__":
     rospy.init_node('time_sync_lidar_cam')
-
     args = parse_args()
 
     image_sub = createImgMsgFilterSubsciber(args.topic_img)
