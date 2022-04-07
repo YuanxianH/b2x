@@ -1,7 +1,7 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-04-06 20:41:01
+ @LastEditTime: 2022-04-07 16:28:39
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: rosrun b2x time_sync_lidar_cam.py ${img_topic} ${pcd_topic} --output_dir ${output_dir}
@@ -63,7 +63,7 @@ class callBackClass:
         points[:, 3] /= 255 # normalize
         
         pcd_path = os.path.join(self.pcd_dir, frame_name + ".pcd")
-        dumpAsPCD(pcd_path, points)
+        dumpAsPCD(pcd_path, points[:, :4])
 
         self.count = (self.count + 1) % self.max_count
 
