@@ -1,12 +1,13 @@
 '''
  @Author: JoeyforJoy & ylheng
  @Date: 2022-03-25 15:10:15
- @LastEditTime: 2022-04-07 16:28:39
+ @LastEditTime: 2022-04-08 11:58:11
  @LastEditors: JoeyforJoy
  @Description: Transfer rosbag to synchronized image and pcd files.
  @Example: rosrun b2x time_sync_lidar_cam.py ${img_topic} ${pcd_topic} --output_dir ${output_dir}
 '''
 
+from ast import Raise
 import numpy as np
 import rospy
 import message_filters
@@ -33,13 +34,23 @@ def parse_args():
                         help = "the subdirectory name of output images")
     parser.add_argument("--tot", type=float, default=0.01, 
                         help = "the tolerence of time synchronization")
+    parser.add_argument("--pts_fmt", type=str, default="pcd",
+                        help = "format of point cloud file, eg. pcd, bin(kitti)")
     return parser.parse_args()
 
 class callBackClass:
-    def __init__(self, output_dir, pcd_subdir="pcd", img_subdir="image", img_compressed=True):
+    def __init__(self, 
+                output_dir,
+                pcd_subdir=None, 
+                img_subdir="image", 
+                img_compressed=True,
+                pts_fmt="pcd"):
         self.output_dir = output_dir
+        if pcd_subdir is None:
+            pcd_subdir = pts_fmt
         self.pcd_dir = os.path.join(self.output_dir, pcd_subdir)
         self.img_dir = os.path.join(self.output_dir, img_subdir)
+        self.pts_fmt = pts_fmt.lower()
         
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.pcd_dir, exist_ok=True)
@@ -59,11 +70,17 @@ class callBackClass:
         # transfer PointCloud2 to pcd
         points = list(pc2.read_points(lidar_msg, skip_nans=True))
         num_points = len(points)
-        points = np.array(points).reshape([num_points, -1])
+        points = np.array(points).reshape([num_points, -1])[:, :4]
         points[:, 3] /= 255 # normalize
         
-        pcd_path = os.path.join(self.pcd_dir, frame_name + ".pcd")
-        dumpAsPCD(pcd_path, points[:, :4])
+        if self.pts_fmt == "pcd":
+            pts_path = os.path.join(self.pcd_dir, frame_name + ".pcd")
+            dumpAsPCD(pts_path, points)
+        elif self.pts_fmt == "bin":
+            pts_path = os.path.join(self.pcd_dir, frame_name + ".bin")
+            dumpAsBin(pts_path, points)
+        else:
+            Raise 
 
         self.count = (self.count + 1) % self.max_count
 
@@ -76,6 +93,6 @@ if __name__ == "__main__":
 
     ts = message_filters.ApproximateTimeSynchronizer([image_sub, lidar_sub], 10, args.tot, allow_headerless=True)
 
-    callback = callBackClass(args.output_dir)
+    callback = callBackClass(args.output_dir, pts_fmt=args.pts_fmt)
     ts.registerCallback(callback)
     rospy.spin()

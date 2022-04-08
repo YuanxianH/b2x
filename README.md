@@ -48,7 +48,7 @@ python bag2pcd.py ${bag_path} ${pcd_topic}
 
 - **get synchronized images and pcd files from a rosbag**:
 ```bash
-python bag2sync_img_pcd.py ${bag_path} ${image_topic} ${pcd_topic}
+python bag2sync_img_pts.py ${bag_path} ${image_topic} ${pcd_topic}
 ```
 
 - **get synchronized two image topics**

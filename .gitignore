@@ -5,3 +5,4 @@ devel/
 .catkin_workspace
 __pycache__/
 TODO.md
+test/

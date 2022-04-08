@@ -1,13 +1,14 @@
 '''
  @Author: JoeyforJoy
  @Date: 2022-03-25 17:03:34
- @LastEditTime: 2022-03-29 11:13:44
+ @LastEditTime: 2022-04-08 11:29:48
  @LastEditors: JoeyforJoy
  @Description: 
 '''
 
 import os
 import cv2
+import numpy as np
 from cv_bridge import CvBridge
 import message_filters
 from sensor_msgs.msg import Image, CompressedImage
@@ -62,6 +63,10 @@ def points2pcdstr(points):
 def dumpAsPCD(filepath, points):
     with open(filepath, "w") as f:
         f.write(points2pcdstr(points))
+
+def dumpAsBin(filepath, points):
+    points = np.array(points).reshape(-1, 4).astype(np.float32)
+    points.tofile(filepath)
 
 def imgMsg2cvImage(img_msg, compressed = True):
     bridge = CvBridge()
